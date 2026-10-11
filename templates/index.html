@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Statement Sentiment Analyzer</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .container {
+            background: white;
+            width: 85%;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        textarea {
+            width: 80%;
+            height: 120px;
+            padding: 15px;
+            font-size: 16px;
+            border-radius: 10px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .result {
+            margin-top: 30px;
+        }
+
+        .charts {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 30px;
+        }
+
+        .chart-box {
+            width: 400px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Statement Sentiment Analyzer</h1>
+
+    <form method="POST">
+
+        <textarea
+            name="statement"
+            placeholder="Enter your statement here..."
+            required>{{ statement }}</textarea>
+
+        <br>
+
+        <button type="submit">
+            Analyze Statement
+        </button>
+
+    </form>
+
+
+    {% if statement %}
+
+    <div class="result">
+
+        <h2>Analysis Result</h2>
+
+        <p>
+            <strong>Statement:</strong>
+            {{ statement }}
+        </p>
+
+        <p>
+            <strong>Polarity:</strong>
+            {{ polarity }}
+        </p>
+
+        <h2>
+            Sentiment: {{ sentiment }}
+        </h2>
+
+        <h3>Sentiment Percentages</h3>
+
+        <p>Positive: {{ positive }}%</p>
+        <p>Negative: {{ negative }}%</p>
+        <p>Neutral: {{ neutral }}%</p>
+
+    </div>
+
+
+    <div class="charts">
+
+        <!-- PIE CHART -->
+
+        <div class="chart-box">
+
+            <h3>Sentiment Pie Chart</h3>
+
+            <canvas id="pieChart"></canvas>
+
+        </div>
+
+
+        <!-- BAR GRAPH -->
+
+        <div class="chart-box">
+
+            <h3>Sentiment Bar Graph</h3>
+
+            <canvas id="barChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const positive = {{ positive }};
+        const negative = {{ negative }};
+        const neutral = {{ neutral }};
+
+
+        // PIE CHART
+
+        new Chart(
+            document.getElementById("pieChart"),
+            {
+                type: "pie",
+
+                data: {
+
+                    labels: [
+                        "Positive",
+                        "Negative",
+                        "Neutral"
+                    ],
+
+                    datasets: [{
+
+                        data: [
+                            positive,
+                            negative,
+                            neutral
+                        ]
+
+                    }]
+
+                }
+
+            }
+        );
+
+
+        // BAR GRAPH
+
+        new Chart(
+            document.getElementById("barChart"),
+            {
+                type: "bar",
+
+                data: {
+
+                    labels: [
+                        "Positive",
+                        "Negative",
+                        "Neutral"
+                    ],
+
+                    datasets: [{
+
+                        label: "Sentiment Percentage",
+
+                        data: [
+                            positive,
+                            negative,
+                            neutral
+                        ]
+
+                    }]
+
+                },
+
+                options: {
+
+                    scales: {
+
+                        y: {
+
+                            beginAtZero: true,
+
+                            max: 100
+
+                        }
+
+                    }
+
+                }
+
+            }
+        );
+
+    </script>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
